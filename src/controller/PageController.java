@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -44,30 +45,18 @@ public class PageController extends Action {
 			studyName="defaultName";
 		}
 		//검색 결과에따라서 리스트가 달라지게끔
-		List<StudyVO> li=studyDB.resultList(studyName);
+/*		List<StudyVO> li=studyDB.resultList(studyName);
+		List<String> status = studyDB.getStatus(studyName, "gon");
+		
 		GroupInfo group= new GroupInfo();
-		
-		String status = studyDB.getStatus(studyName, "gon");
-		req.setAttribute("room", li);
-		req.setAttribute("status", status);
-		
+		group.setStudy(li);
+		group.setStatus(status);
+*/
+		List<GroupInfo> group=studyDB.resultList(studyName,"gon");
+		req.setAttribute("group", group);
 		return "/view/main.jsp";
 	}
 
-	public String searchGroup(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-		String studyName = req.getParameter("studyName");
-		String correctName = req.getParameter("correctName");
-		if (correctName == null) {
-			correctName = "";
-		}
-
-		StudyDAO studyDB = StudyDAO.getInstance();
-		List li = studyDB.resultList(studyName);
-		String status = studyDB.getStatus(correctName, "gon");
-		req.setAttribute("room", li);
-		req.setAttribute("status", status);
-		return "/view/searchGroup.jsp";
-	}
 
 	public String requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		String reqNum = req.getParameter("reqNum");

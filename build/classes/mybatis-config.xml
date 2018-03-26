@@ -6,6 +6,8 @@
    <typeAliases>
    <typeAlias type="studygroup.StudyVO" alias="Room"/> 
   <typeAlias type="calendar.CalendarVO" alias="Schedule"/>  
+  <typeAlias type="studygroup.RelationVO" alias="Relation"/>  
+  
    </typeAliases> 
    <!--  -->
    <environments default="development">

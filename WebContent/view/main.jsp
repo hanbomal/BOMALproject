@@ -10,7 +10,9 @@
 	<div class="w3-cell-row">
 		<div class="w3-third"></div>
 		<div class="w3-container w3-cell" style="width: 60%">
-			<c:forEach var="room" items="${room}">
+		
+		
+		 <c:forEach var="room" items="${group}">
 				<ul class="w3-ul w3-card-4 w3-light-grey">
 					<li class="w3-bar">
 						<!--그룹 프로필  --> 
@@ -31,7 +33,7 @@
 								${room.study_intro }</span>
 						</div> 
 						
-						<c:if test="${status==null}">
+						<c:if test="${room.relation.status==null}">
 							<form action="requestJoin" class="w3-right">
 								<input type="hidden" name="reqNum" value="1" /> 
 								<input type="hidden" name="correctName" value="${room.studyName}" />
@@ -41,7 +43,7 @@
 							</form>
 						</c:if> 
 						
-						<c:if test="${status==1}">
+						<c:if test="${room.relation.status==1}">
 							<form action="cancelJoin" class="w3-right">
 								<input type="hidden" name="delNum" value="1" /> <input
 									type="hidden" name="correctName" value="${room.studyName}" />
@@ -52,7 +54,7 @@
 					</li>
 				</ul>
 
-			</c:forEach>
+			</c:forEach> 
 		</div>
 		<div class="w3-third"></div>
 	</div>

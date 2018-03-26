@@ -19,14 +19,12 @@
 		select * from studygroup where studyName like '%'||#{studyName}||'%'
 	</select>
 
-	<select id="getStatus" parameterType="hashmap" resultType="string">
-		select status from
-		studygroup g, studyrelation r where g.studyName=r.studyName
-		and
-		memberId=#{memberId}
-		<if test="studyName!=null">
-		   and r.studyName=#{studyName}
-		</if>
-	</select>
+ <select id="getRelation" parameterType="hashmap" resultType="Relation">
+		select status from	studygroup g, studyrelation r where g.studyName=r.studyName
+    and memberId=#{memberId} and r.studyName like '%'||'#{studyName}'||'%'
+	</select> 
 
+	<select id="getAllStudy" resultType="Room">
+		select * from studygroup
+	</select>
 </mapper>
