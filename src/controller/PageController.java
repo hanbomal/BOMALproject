@@ -52,7 +52,7 @@ public class PageController extends Action {
 		group.setStudy(li);
 		group.setStatus(status);
 */
-		List<GroupInfo> group=studyDB.resultList(studyName,"gon");
+		List<StudyVO> group=studyDB.resultList(studyName,"gon");
 		req.setAttribute("group", group);
 		return "/view/main.jsp";
 	}

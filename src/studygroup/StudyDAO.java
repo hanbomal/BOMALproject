@@ -28,7 +28,7 @@ public class StudyDAO extends MybatisConnector{
 		sqlSession.commit();
 		sqlSession.close();
 	}
-	public List resultList(String studyName, String memberId ) {
+	public List resultList(String studyName, String memberId) {
 		sqlSession=sqlSession();
 		Map<String,String> map = new HashMap<>();
 		map.put("studyName", studyName);
@@ -36,23 +36,23 @@ public class StudyDAO extends MybatisConnector{
 		List groupli=null;
 		Iterator it = li.iterator(); 
 		
-		StudyDAO studyDB = StudyDAO.getInstance();
 		if(it.hasNext()) {
-			RelationVO info=studyDB.getRelation(studyName, memberId);
 			groupli=new ArrayList<>();
 			do {
-				GroupInfo groupInfo = (GroupInfo) it.next();
+				StudyVO groupInfo = (StudyVO) it.next();
+				StudyDAO studyDB = StudyDAO.getInstance();
+				RelationVO info=studyDB.getRelation(groupInfo.getStudyName(), memberId);
 				groupInfo.setRelation(info);
 				groupli.add(groupInfo);				
 			}while(it.hasNext());
 		}
 		sqlSession.close();
-		return li;
+		return groupli;
 	}
-	public RelationVO getRelation(String studyName,String memberId ) {
+	public RelationVO getRelation(String corretName,String memberId ) {
 		sqlSession=sqlSession();
 		Map<String,String> map = new HashMap<>();
-		map.put("studyName", studyName);
+		map.put("studyName", corretName);
 		map.put("memberId", memberId);
 		RelationVO status=sqlSession.selectOne(namespace+".getRelation",map);
 		sqlSession.close();
