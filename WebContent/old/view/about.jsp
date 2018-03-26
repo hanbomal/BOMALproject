@@ -2,7 +2,9 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<!--  이전꺼 지우고 지혜 추가 작업-->
+<!-- 지혜가 작업한 양 -->
+<!-- 지혜 추가 작업함 -->
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!-- content -->
 <div class="w3-container bgimg-1" style="padding:128px 16px" id="about">
