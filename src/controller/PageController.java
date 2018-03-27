@@ -29,17 +29,13 @@ public class PageController extends Action {
 		}
 		req.setAttribute("nameList", nameList);
 	}
-	
-	
+
 	public String main(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		autoComplete(req);
+		
 		//search_studyRoom
 		StudyDAO studyDB = StudyDAO.getInstance();
 		String studyName = req.getParameter("studyName");
-		String reqNum = req.getParameter("reqNum");
-		if (reqNum == null) {
-			reqNum = "";
-		}
 		if(studyName==null) {
 			studyName="defaultName";
 		}
@@ -51,31 +47,41 @@ public class PageController extends Action {
 		group.setStudy(li);
 		group.setStatus(status);
 */
-		List<StudyVO> group=studyDB.resultList(studyName,getSessionId(req));
+		String memberid=getSessionId(req);
+		if(memberid==null) {
+			memberid="";
+		}
+		List<StudyVO> group=studyDB.resultList(studyName,memberid);
 		req.setAttribute("group", group);
+		req.setAttribute("studyName", studyName);
 		return "/view/main.jsp";
 	}
 
 
-	public void requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+	public String requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		RelationDAO dbPro = RelationDAO.getInstance();
+		StudyDAO studyDB = StudyDAO.getInstance();
+		String memberid=getSessionId(req);
 		String reqNum = req.getParameter("reqNum");
-		String studyName = req.getParameter("studyName");
+		String correctName = req.getParameter("correctName");
 		String leader=req.getParameter("leader");
 		if (reqNum == null) {
 			reqNum = "0";
 		}
 		// reqNum을 받아왔을 때, relation 테이블에 추가
-		RelationDAO dbPro = RelationDAO.getInstance();
 		if (reqNum.equals("1")) {
-			dbPro.requestJoin(getSessionId(req), studyName,"member_nick","회원",leader);
+			dbPro.requestJoin(getSessionId(req), correctName,"member_nick","회원",leader);
+			List<StudyVO> group=studyDB.resultList(correctName,memberid);
+			req.setAttribute("group", group);
 		}
+		return "/view/main.jsp";
 	}
 
 	public String cancelJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		String delNum = req.getParameter("delNum");
 		String studyName = req.getParameter("studyName");
 		if (delNum == null) {
-			delNum = "";
+			delNum = "0";
 		}
 		// delNum을 받아왔을 때, relation 테이블에 삭제
 		RelationDAO dbPro = RelationDAO.getInstance();
@@ -113,6 +119,9 @@ public class PageController extends Action {
 	public String getSessionId(HttpServletRequest req) {
 		HttpSession session = req.getSession();
 		String memberid=(String) session.getAttribute("memberid");
+		if(memberid==null) {
+			memberid="";
+		}
 		return memberid;
 	}
 	

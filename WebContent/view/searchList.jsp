@@ -3,14 +3,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="<%=request.getContextPath()%>/common/httpRequest.js"></script>
+<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/common/httpRequest.js"></script>
 
 <script type="text/javascript">
 	function helloToServer(){
 		var params ="reqNum="+encodeURIComponent(document.req.reqNum.value)
 		+"&studyName="+encodeURIComponent(document.req.studyName.value)+"&leader="
-		encodeURIComponent(document.req.studyName.value)+"&correctName="
-		+encodeURIComponent(document.req.correctName.value);
+		+encodeURIComponent(document.req.leader.value);
 		sendRequest("requestJoin",params,helloFromServer,"POST");
 	}
 	
@@ -21,7 +20,7 @@
 			}
 		}
 	}
-</script>
+</script> --%>
 
 <!-- content -->
 <div class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
@@ -54,15 +53,14 @@
 						</div> 
 					
 						<c:if test="${room.relation.status==null}">
-							<form class="w3-right" name="req">
+							<form action="searchList" class="w3-right" name="req">
 								<input type="hidden" name="reqNum" value="1" /> 
-								<input type="hidden" name="correctName" value="${room.studyName}" />
-								<input type="hidden" name="studyName" value="${studyName}" />
+								<input type="hidden" name="corretName" value="${room.studyName}" />
 								<input type="hidden" name="leader" value="${room.leader}" />
-								<!-- <input class="w3-button w3-blue w3-round " type="submit"
-									value="가입" /> -->
-								<input type="button" class="w3-button w3-blue w3-round"
-								value="가입" onclick="helloToServer()" />
+								<input class="w3-button w3-blue w3-round " type="submit"
+									value="가입" /> 
+							<!-- 	<input type="button" class="w3-button w3-blue w3-round"
+								value="가입" onclick="helloToServer()" /> -->
 							</form>
 						</c:if> 
 						<!-- <form name="f">
