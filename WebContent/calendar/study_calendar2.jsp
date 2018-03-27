@@ -18,8 +18,7 @@
         margin : 0 auto;
     }
   
-body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-    
+
 </style>
 <link href="../api/fullcalendar-3.9.0/fullcalendar.css" rel="stylesheet"/>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -29,21 +28,29 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 <script type="text/javascript" src="../api/fullcalendar-3.9.0/fullcalendar.js"></script>
 <script type="text/javascript" src="../api/fullcalendar-3.9.0/locale-all.js"></script>
 <script type="text/javascript" src="../api/fullcalendar-3.9.0/gcal.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/api/httpRequest.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- 달력 출력 자바스크립트 -->
+
 <script type="text/javascript">
 var dataset = [
     <c:forEach var="list" items="${list}" varStatus="status">
             {"id":'<c:out value="${list.num}" />'
             ,"title":'<c:out value="${list.title}" />'
             ,"start":'<c:out value="${list.startdate}" />'
-                ,"end":'<c:out value="${list.enddate}" />'} 
+                ,"end":'<c:out value="${list.enddate}" />'
+                ,"place":'<c:out value="${list.place}"/>'
+                ,"description":'<c:out value="${list.description}"/>'
+                ,"studynum":'<c:out value="${list.studynum}"/>'
+            } 
             <c:if test="${!status.last}">,</c:if>
        
     </c:forEach> 
 ];
 
-function load1() {
+jQuery(document).ready(function(){
     jQuery("#calendar").fullCalendar({
     	customButtons: {
     	    addButton: {
@@ -86,7 +93,7 @@ function load1() {
         	
         	function(calEvent, jsEvent, view) {
         	
-  		 	 toServer1(calEvent.id);
+  		 	 contentView(calEvent.id);
   		   document.getElementById('addDay').style.display='none';
   		   document.getElementById('message').style.display='block';
   		
@@ -98,7 +105,13 @@ function load1() {
            
             if (!confirm(event.title + "을(를) " + event.start.format() + "로 이동합니다")) {	
                  revertFunc(); 
-            }}
+            }else{
+  
+      		  var data='title='+event.title+'&place='+event.place+'&studynum='+event.studynum+'&id='+event.id+'&description='+event.description+"&startdate="+event.start.format()+"&enddate="+event.end.format();
+      		  update(data);};
+      		  
+        
+        }
         , navLinks: true
        /* ,allDay:true  각 스케쥴에 map으로 넣기*/
        , select: function(startDate, endDate) {
@@ -112,79 +125,61 @@ function load1() {
        }
 
     });
-}
+});
 
-  jQuery(document).ready(load1());
+ 
     
-function toServer1(data){
-		var id="id="+data;
-		sendRequest("<%=request.getContextPath()%>/calcontroller/contents",id,fromServer1,"POST");
-		
-	}
-	function fromServer1(){
-		if(httpRequest.readyState==4){
-			if(httpRequest.status==200){
-				document.getElementById("messageContent").innerHTML=httpRequest.responseText;
-			}
-		}	
-	}
-</script>
-<script>
-var menuClick = function(url){
-	if(url == '/'){
-		location.reload(true);
-		return;
-	}
-	$.ajax({
-		type: 'POST',
-		url: url,
-		async:false,
-		data: "",
-		contentType:"application/x-www-form-urlencoded; charset=UTF-8",
-		success: function(data) {
-			$('#messageContent').html(data);
-		},
-		error: function(request, status, error) {
-			alert(error);
-		}
-	});
-};
-
-
 
 </script>
+
 <body class="w3-padding">
 
 
 <!-- 달력 출력 모달 -->
     <div class="w3-container" id="calendar" ></div>
     
+     <!-- 메시지 모달 -->
+       <div id="message" class="w3-modal" >
+<div id="messageContent" class="w3-center  w3-container w3-padding">
+</div>  </div>
+    
     
     <!-- 일정 등록 모달 -->
-     <div id="addDay" class="w3-modal " >
+     <div id="addDay" class="w3-modal" >
+     
     <div class="w3-modal-content w3-light-grey w3-card-4" style="max-width: 400px;">
      <div class="w3-container w3-center w3-teal">
        <h6><b>일정 등록</b></h6>
       </div>
       <div class="w3-container w3-padding" >
-        <span onclick="document.getElementById('addDay').style.display='none'; document.getElementById('startdate').value=''; document.getElementById('enddate').value=''; location.reload();" class="w3-button w3-display-topright">&times;</span>
+        <span onclick="document.getElementById('addDay').style.display='none'; document.getElementById('startdate').value=''; document.getElementById('enddate').value=''; " class="w3-button w3-display-topright">&times;</span>
        
 <div class="calendarForm w3-center  w3-container w3-padding" id="modal">
 	<form id="userinput" >
-	<ul class="w3-ul w3-light-grey"><li><label>제목</label><input type="text" id="title" name="title" class="w3-input w3-border"></li>
+	<ul class="w3-ul w3-light-grey">
+	<li><label>제목</label><input type="text" id="title" name="title" class="w3-input w3-border"></li>
 	<li><label>장소</label><input type="text" id="place" name="place" class="w3-input w3-border"></li>
-	<li><label>시작일</label><input type="text" id="startdate" name="startdate" placeholder="YYYY-MM-DD"  value="" class="w3-input w3-border"></li>
-	<li><label>종료일</label><input type="text" id="enddate" name="enddate" placeholder="YYYY-MM-DD" value="" class="w3-input w3-border"></li>
-	<li><label>내용</label><input type="text" id="description" name="description" class="w3-input w3-border"></li>
-	<li><button class="w3-button" id="commitbtn" onclick="checkValue();">전송</button><input type="reset" class="w3-button" value="다시쓰기"></li>
+	<li><label>시작일</label>
+	<input type="text" id="startdate" name="startdate" placeholder="YYYY-MM-DD"  value="" class="w3-input w3-border"></li>
+	<li><label>종료일</label>
+	<input type="text" id="enddate" name="enddate" placeholder="YYYY-MM-DD" value="" class="w3-input w3-border"></li>
+	<li><label>내용</label>
+	<input type="text" id="description" name="description" class="w3-input w3-border"></li>
+	<li><button class="w3-button" id="commitbtn" onclick="checkValue('add');">전송</button>
+	<input type="reset" class="w3-button" value="다시쓰기"></li>
 	
 	</ul>
 	</form>
 
 </div>
-
+   </div>
+    </div>
+  </div>
+  
+  
 <script>
 function checkValue(){
+	
 	var input=eval("document.userinput");
 	var thisform=document.userinput;
 	if(!userinput.title.value){
@@ -207,28 +202,71 @@ function checkValue(){
 		alert("종료일을 시작일보다 이전으로 선택할 수 없습니다.");
 		event.preventDefault(); 
 		return userinput.enddate.focus();
-	}else{ $('#userinput').submit(function(event){
+	}else{ 
+		$('#userinput').submit(function(event){
 		 
 		  var data=$(this).serialize();
-		  toServer(data);
+		  addSchedule(data);
 		   document.getElementById('addDay').style.display='none';
 		   document.getElementById('message').style.display='block';
 			  
-			  event.preventDefault();  //기본 폼의 submit이 발생되지 않게 막기
-	  });}
+			  event.preventDefault(); } //기본 폼의 submit이 발생되지 않게 막기
+		); 
+
+	};
+		
 }
 
+    function checkUpdateValue(){
+    	
+    	var input=eval("document.updateinput");
+    	var thisform=document.updateinput;
+    	if(!updateinput.title.value){
+    		alert("일정 제목을 입력하세요");
+    		event.preventDefault(); 
+    		return updateinput.title.focus();
+    	}else
+    	if(!updateinput.startdate.value){
+    		alert("시작일을 입력하세요");
+    		event.preventDefault(); 
+    		return updateinput.startdate.focus();
+    	}else
+    	if(!updateinput.enddate.value){
+    		alert("종료일을 입력하세요");
+    		event.preventDefault(); 
+    		return updateinput.enddate.focus();
+    	}else
 
-</script>
+    	if(updateinput.startdate.value>updateinput.enddate.value){
+    		alert("종료일을 시작일보다 이전으로 선택할 수 없습니다.");
+    		event.preventDefault(); 
+    		return updateinput.enddate.focus();
+    	}else{ 
+    		$('#updateinput').submit(function(event){
+    		 
+    		  var data=$(this).serialize();
+    		  update(data);
+    		   document.getElementById('addDay').style.display='none';
+    		   document.getElementById('message').style.display='block';
+    			  
+    			  event.preventDefault(); } //기본 폼의 submit이 발생되지 않게 막기
+    		); 
 
-<script type="text/javascript" src="<%=request.getContextPath() %>/api/httpRequest.js"></script>
-<script type="text/javascript">
+    	};
+    		
+    }
 
-	function toServer(data){
-		
-		sendRequest("<%=request.getContextPath()%>/calcontroller/addPro1",data,fromServer,"POST");
-		
+function toUpdatePage(data){
+	
+	var id="id="+data;
+		sendRequest("<%=request.getContextPath()%>/calcontroller/updateForm",id,fromServer,"POST");	
+		event.preventDefault(); 	
 	}
+
+	function addSchedule(data){
+		sendRequest("<%=request.getContextPath()%>/calcontroller/addPro1",data,fromServer,"POST");
+	}
+
 	function fromServer(){
 		if(httpRequest.readyState==4){
 			if(httpRequest.status==200){
@@ -236,40 +274,47 @@ function checkValue(){
 			}
 		}	
 	}
-</script>
-<script>
-
- $(document).ready(function(){
- 
-
- });
-
-</script>
-
-
-
-      </div>
-    </div>
-  </div>
-  
-  
-  <!-- 메시지 모달 -->
-       <div id="message" class="w3-modal" >
-    <div class="w3-modal-content" style="max-width: 400px;">
-      <div class="w3-container" >
-        <span onclick="document.getElementById('message').style.display='none'; location.reload();" class="w3-button w3-display-topright">&times;</span>
-       
-<div id="messageContent">
-	<p id="calt"></p>
-	<p id="calsdate"></p>
 	
-</div>
+	function contentView(data){
+		var id="id="+data;
+		sendRequest("<%=request.getContextPath()%>/calcontroller/contents",id,fromServer,"POST");
+		
+	}
+	
+	
+function update(data){
+		
+		sendRequest("<%=request.getContextPath()%>/calcontroller/updatePro",data,fromServer,"POST");
+		
+	}
+function deleteSchedule(data){
+	var id="id="+data;
+	sendRequest("<%=request.getContextPath()%>/calcontroller/deleteCalendar",id,fromServer,"POST");
+	
+}
 
 
-      </div>
-    </div>
-  </div>
+var menuClick = function(url){
+	if(url == '/'){
+		location.reload(true);
+		return;
+	}
+	$.ajax({
+		type: 'POST',
+		url: url,
+		async:false,
+		data: "",
+		contentType:"application/x-www-form-urlencoded; charset=UTF-8",
+		success: function(data) {
+			$('#messageContent').html(data);
+		},
+		error: function(request, status, error) {
+			alert(error);
+		}
+	});
+};
 
+</script>
 
 </body>
 </html>
