@@ -5,7 +5,7 @@
        <h6><b>일정 보기</b></h6>
       </div>
       <div class="w3-container w3-padding" >
-        <span onclick="document.getElementById('addDay').style.display='none'; document.getElementById('startdate').value=''; document.getElementById('enddate').value=''; location.reload();" class="w3-button w3-display-topright">&times;</span>
+        <span onclick="document.getElementById('message').style.display='none'; document.getElementById('startdate').value=''; document.getElementById('enddate').value=''; " class="w3-button w3-display-topright">&times;</span>
        
 <div class="calendarForm w3-center  w3-container w3-padding" id="modal">
 	<form id="userinput" >
@@ -14,11 +14,8 @@
 	<li><label>시작일</label>${calendar.startdate}</li>
 	<li><label>종료일</label>${calendar.enddate}</li>
 	<li><label>내용</label>${calendar.description}</li>
-	<li><button class="w3-button" id="commitbtn" onclick="checkValue();">수정</button><input type="reset" class="w3-button" value="삭제"></li>
+	<li><button class="w3-button"  onclick="toUpdatePage(${calendar.num});">수정</button><input type="reset" class="w3-button" onclick="deleteSchedule(${calendar.num});" value="삭제"></li>
 	
 	</ul>
 	</form>
-
-</div>
-    
-</div></div>
+</div></div></div>

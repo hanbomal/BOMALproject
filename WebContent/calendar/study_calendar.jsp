@@ -154,7 +154,7 @@ var menuClick = function(url){
 	
 	</ul>
 	</form>
-	<button onclick="javascript: document.getElementById('addDay').style.display='none'; document.getElementById('message').style.display='block'; menuClick('<%=request.getContextPath() %>/calendar/addComp.jsp');" >a버튼</button>
+	<button onclick="javascript: document.getElementById('addDay').style.display='none'; document.getElementById('message').style.display='block'; menuClick('<%=request.getContextPath() %>/calcontroller/test1');" >a버튼</button>
 
 </div>
 

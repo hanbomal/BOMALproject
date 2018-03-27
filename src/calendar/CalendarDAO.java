@@ -44,6 +44,19 @@ public class CalendarDAO extends MybatisConnector{
 
 	}
 	
+	public int deleteCalendar(String num) {
+		sqlSession=sqlSession();
+		Map map=new HashMap();
+		map.put("num", num);
+		int ck=-1;
+		ck=sqlSession.update(namespace+".deleteCalendar",map);
+		sqlSession.commit();
+		sqlSession.close();
+		return ck;
+
+	}
+	
+	
 	public void addCalendar(CalendarVO calendar) {
 		sqlSession=sqlSession();
 		int num=0;
