@@ -13,8 +13,14 @@ public class StudyVO {
 	private String study_intro; //설명
 	private int proSize;
 	private int backSize;
+	private RelationVO relation;
 	
-	
+	public RelationVO getRelation() {
+		return relation;
+	}
+	public void setRelation(RelationVO relation) {
+		this.relation = relation;
+	}
 	public String getStudyName() {
 		return studyName;
 	}

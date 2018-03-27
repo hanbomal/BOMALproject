@@ -3,6 +3,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<%-- <script type="text/javascript" src="<%=request.getContextPath()%>/common/httpRequest.js"></script>
+
+<script type="text/javascript">
+	function helloToServer(){
+		var params ="reqNum="+encodeURIComponent(document.req.reqNum.value)
+		+"&studyName="+encodeURIComponent(document.req.studyName.value)+"&leader="
+		+encodeURIComponent(document.req.leader.value);
+		sendRequest("requestJoin",params,helloFromServer,"POST");
+	}
+	
+	function helloFromServer(){
+		if(httpRequest.readyState==4){
+			if(httpRequest.status==200){
+				alert("요청완료");
+			}
+		}
+	}
+</script> --%>
+
 <!-- content -->
 <div class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
 	<br> <br> <br>
@@ -10,7 +29,9 @@
 	<div class="w3-cell-row">
 		<div class="w3-third"></div>
 		<div class="w3-container w3-cell" style="width: 60%">
-			<c:forEach var="room" items="${room}">
+		
+		
+		 <c:forEach var="room" items="${group}">
 				<ul class="w3-ul w3-card-4 w3-light-grey">
 					<li class="w3-bar">
 						<!--그룹 프로필  --> 
@@ -30,21 +51,27 @@
 							<span class="w3-large">${room.studyName}</span><br> <span>
 								${room.study_intro }</span>
 						</div> 
-						
-						<c:if test="${status==null}">
-							<form action="requestJoin" class="w3-right">
+					
+						<c:if test="${room.relation.status==null}">
+							<form action="requestJoin" class="w3-right" name="req">
 								<input type="hidden" name="reqNum" value="1" /> 
-								<input type="hidden" name="correctName" value="${room.studyName}" />
 								<input type="hidden" name="studyName" value="${room.studyName}" />
-								<input class="w3-button w3-blue w3-round " type="submit"
-									value="가입" />
+								<input type="hidden" name="leader" value="${room.leader}" />
+								<!-- <input class="w3-button w3-blue w3-round " type="submit"
+									value="가입" /> -->
+								<input type="button" class="w3-button w3-blue w3-round"
+								value="가입" onclick="helloToServer()" />
 							</form>
 						</c:if> 
-						
-						<c:if test="${status==1}">
+						<!-- <form name="f">
+							 <input type="text" name="name" />
+							<input type="button" value="입력" onclick="helloToServer()" />
+							</form>
+							<div id="aaa"></div> -->
+						<c:if test="${room.relation.status==1}">
 							<form action="cancelJoin" class="w3-right">
 								<input type="hidden" name="delNum" value="1" /> <input
-									type="hidden" name="correctName" value="${room.studyName}" />
+									type="hidden" name="studyName" value="${room.studyName}" />
 								<input class="w3-button w3-red w3-round " type="submit"
 									value="취소" />
 							</form>
@@ -52,7 +79,7 @@
 					</li>
 				</ul>
 
-			</c:forEach>
+			</c:forEach> 
 		</div>
 		<div class="w3-third"></div>
 	</div>

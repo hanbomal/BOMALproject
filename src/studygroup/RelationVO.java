@@ -11,12 +11,12 @@ public class RelationVO {
 	Date lastDate; //마지막 접속 일자
 	String position; 
 	String leader; 
-	int status;
+	String status;
 	
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	public String getLeader() {

@@ -64,6 +64,18 @@
     <url-pattern>/TestAjax</url-pattern>
   </servlet-mapping>
   
+
+     <servlet>
+ 	<servlet-name>MemberController</servlet-name>
+ 	<servlet-class>controller.MemberController</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>MemberController</servlet-name>
+  <url-pattern>/member/*</url-pattern>
+  </servlet-mapping>
+  
+
     <servlet>
  	<servlet-name>chatController</servlet-name>
  	<servlet-class>controller.ChatController</servlet-class>
@@ -75,6 +87,7 @@
   </servlet-mapping>
   
   
+
   
   
 </web-app>
