@@ -6,6 +6,9 @@
    <typeAliases>
    <typeAlias type="studygroup.StudyVO" alias="Room"/> 
   <typeAlias type="calendar.CalendarVO" alias="Schedule"/>  
+  <typeAlias type="studygroup.RelationVO" alias="Relation"/>  
+  <typeAlias type="member.MemberVO" alias="Member"/>  
+  
    </typeAliases> 
    <!--  -->
    <environments default="development">
@@ -24,5 +27,6 @@
    		<mapper resource="Study.xml"/> 
    		<mapper resource="Relation.xml"/> 
    		 <mapper resource="Calendar.xml"/>  
+   		 <mapper resource="Member.xml"/>  
    </mappers>
 </configuration>

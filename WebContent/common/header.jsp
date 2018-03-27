@@ -131,14 +131,14 @@ body, html {
 
 			</div>
 
-			<form class="w3-container" method="post" action="../user/loginPro">
+			<form class="w3-container" method="post" action="../member/loginPro">
 				<div class="w3-section">
-					<label><b>ID</b></label> <input
-						class="w3-input w3-border w3-margin-bottom" type="text"
+					<label><b>ID</b></label> 
+					<input class="w3-input w3-border w3-margin-bottom" type="text"
 						style="display: block; width: 100%;" placeholder="아이디를 입력하세요."
-						name="tryid" required> <label><b>PASSWORD</b></label> <input
-						class="w3-input w3-border" style="display: block; width: 100%;"
-						type="password" placeholder="비밀번호를 입력하세요." name="trypwd" required>
+						name="memberid" required> <label><b>PASSWORD</b></label> 
+					<input class="w3-input w3-border" style="display: block; width: 100%;"
+						type="password" placeholder="비밀번호를 입력하세요." name="passwd" required>
 					<button class="w3-button w3-block w3-black w3-section w3-padding"
 						type="submit">로그인</button>
 					<input class="w3-check w3-margin-top" type="checkbox"
@@ -151,7 +151,7 @@ body, html {
 					onclick="document.getElementById('login').style.display='none'"
 					type="button" class="w3-button w3-black">취소</button>
 				<span class="w3-right w3-padding w3-hide-small"><a
-					href="../user/join">회원가입</a>&nbsp;&nbsp;&nbsp; <a href="#">비밀번호</a>를
+					href="../member/join">회원가입</a>&nbsp;&nbsp;&nbsp; <a href="#">비밀번호</a>를
 					잊으셨나요?</span>
 			</div>
 
