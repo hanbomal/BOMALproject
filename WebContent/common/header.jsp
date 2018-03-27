@@ -57,7 +57,7 @@ body, html {
 			<!-- autoComplete Form-->
 			<div class="w3-left" style="margin-top:11px;" >
 				
-				<form action="../page/main" autocomplete="off">
+				<form action="../page/main" autocomplete="off" method="post">
 				<input type="text" style="outline:none;width:250px" class="w3-round"
 				placeholder="Search..." name="studyName" id="myInput">
 				<button type="submit" class="w3-button w3-blue w3-round" style="margin-left:-4px;padding:8px;margin-bottom:2px">

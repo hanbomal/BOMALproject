@@ -19,11 +19,11 @@
 	</select>
 
  <select id="getRelation" parameterType="hashmap" resultType="Relation">
-		select memberId,r.studyName, joinPoint, r.nickName
+		select memberId,r.studyName, joinPoint, r.nickName,
 		joinDate, lastDate, position, r.leader, status
 		 from studygroup g, studyrelation r where 
-		g.studyName=r.studyName and memberId=#{memberId} 
-		and r.studyName =#{studyName}
+		g.studyName=r.studyName and memberId=#{memberid} 
+		and g.studyName =#{studyName}
 	</select> 
 
 	<select id="getAllStudy" resultType="Room">
