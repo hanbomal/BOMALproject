@@ -8,12 +8,12 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.sist.msk.Action;
 
-import studygroup.GroupInfo;
 import studygroup.RelationDAO;
 import studygroup.StudyDAO;
 import studygroup.StudyVO;
@@ -33,13 +33,12 @@ public class PageController extends Action {
 	
 	public String main(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		autoComplete(req);
-		
 		//search_studyRoom
 		StudyDAO studyDB = StudyDAO.getInstance();
 		String studyName = req.getParameter("studyName");
-		String correctName = req.getParameter("correctName");
-		if(correctName==null) {
-			correctName="";
+		String reqNum = req.getParameter("reqNum");
+		if (reqNum == null) {
+			reqNum = "";
 		}
 		if(studyName==null) {
 			studyName="defaultName";
@@ -52,37 +51,36 @@ public class PageController extends Action {
 		group.setStudy(li);
 		group.setStatus(status);
 */
-		List<StudyVO> group=studyDB.resultList(studyName,"gon");
+		List<StudyVO> group=studyDB.resultList(studyName,getSessionId(req));
 		req.setAttribute("group", group);
 		return "/view/main.jsp";
 	}
 
 
-	public String requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+	public void requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		String reqNum = req.getParameter("reqNum");
-		String correctName = req.getParameter("correctName");
+		String studyName = req.getParameter("studyName");
+		String leader=req.getParameter("leader");
 		if (reqNum == null) {
 			reqNum = "0";
 		}
 		// reqNum을 받아왔을 때, relation 테이블에 추가
 		RelationDAO dbPro = RelationDAO.getInstance();
 		if (reqNum.equals("1")) {
-			dbPro.requestJoin("gon", correctName);
+			dbPro.requestJoin(getSessionId(req), studyName,"member_nick","회원",leader);
 		}
-		res.sendRedirect(req.getContextPath() + "/page/main");
-		return null;
 	}
 
 	public String cancelJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-		String delNum = req.getParameter("reqNum");
-		String studyName = req.getParameter("correctName");
+		String delNum = req.getParameter("delNum");
+		String studyName = req.getParameter("studyName");
 		if (delNum == null) {
-			delNum = "0";
+			delNum = "";
 		}
 		// delNum을 받아왔을 때, relation 테이블에 삭제
 		RelationDAO dbPro = RelationDAO.getInstance();
 		if (delNum.equals("1")) {
-			dbPro.cancelJoin("gon", studyName);
+			dbPro.cancelJoin(getSessionId(req), studyName);
 		}
 		res.sendRedirect(req.getContextPath() + "/page/main");
 		return null;
@@ -112,9 +110,15 @@ public class PageController extends Action {
 
 		return "/view/study_making.jsp";
 	}
-
+	public String getSessionId(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		String memberid=(String) session.getAttribute("memberid");
+		return memberid;
+	}
+	
 	public String makingPro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
+		
+		
 		String realFolder = "";
 		String encType = "utf-8";
 		int maxSize = 10 * 1024 * 1024;
@@ -139,10 +143,10 @@ public class PageController extends Action {
 		}
 
 		StudyVO room = new StudyVO();
-		room.setPeopleCount(1);
-		room.setLeader("gon");
-		room.setStudy_intro(multi.getParameter("study_intro"));
 		room.setStudyName(multi.getParameter("studyName"));
+		room.setPeopleCount(1);
+		room.setLeader(getSessionId(req));
+		room.setStudy_intro(multi.getParameter("study_intro"));
 
 		if (file[0] != null) {
 			room.setStudy_pro(filename[0]);

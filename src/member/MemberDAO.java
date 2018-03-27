@@ -7,16 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.session.SqlSession;
+
+import member.MemberVO;
+import util.MybatisConnector;;
 
 
-
-import member.MemberVO;;
-
-public class MemberDAO {
-
+public class MemberDAO extends MybatisConnector {
+		private final String namespace="member";
+		SqlSession sqlSession;
 	
-		// ½Ì±ÛÅÏ
+		// ï¿½Ì±ï¿½ï¿½ï¿½
 		private static MemberDAO instance = new MemberDAO();
 		private String id;
 		private MemberDAO() {
@@ -26,9 +31,9 @@ public class MemberDAO {
 		public static MemberDAO getInstance() {
 			return instance;
 		}
-		// ½ÌÅ¬ÅÏ end.
+		// ï¿½ï¿½Å¬ï¿½ï¿½ end.
 		
-		// µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á °¡Á®¿À±â
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		public static Connection getConnection() {
 			Connection conn = null;
 			try {
@@ -51,7 +56,7 @@ public class MemberDAO {
 			if(pstmt!=null) try {pstmt.close();} catch (SQLException e) {}
 		}
 		
-		// È¸¿ø°¡ÀÔ (Ãß°¡) ¸Þ¼Òµå
+		// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ß°ï¿½) ï¿½Þ¼Òµï¿½
 		public void insertMember(MemberVO member) {
 			String sql="";
 			Connection conn = getConnection();
@@ -63,7 +68,7 @@ public class MemberDAO {
 				pstmt = conn.prepareStatement("select memberSer.nextval from dual");
 				rs = pstmt.executeQuery();
 				if (rs.next())
-					number = rs.getInt(1) + 1;
+					number = rs.getInt(1);
 				else number = 1;
 				
 				sql = "insert into member(num,listid, memberid, passwd, nickname, joindate, lastdate)";
@@ -88,7 +93,7 @@ public class MemberDAO {
 			
 		}
 		
-		// È¸¿ø ¼ö ¸Þ¼Òµå
+		// È¸ï¿½ï¿½ ï¿½ï¿½ ï¿½Þ¼Òµï¿½
 		public int getMemberCount(String listid) throws SQLException {
 			int x = 0;
 			String sql = "SELECT nvl(count(*),0) FROM member WHERE listid = ?";
@@ -112,7 +117,7 @@ public class MemberDAO {
 			return x;
 		}
 		
-		// È¸¿ø¸®½ºÆ® ¸ñ·ÏÃâ·Â ¸Þ¼Òµå
+		// È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
 		public List getMembers(int startRow, int endRow, String listid) {
 			Connection conn = null;
 			PreparedStatement pstmt = null;
@@ -186,7 +191,7 @@ public class MemberDAO {
 		}
 		
 		
-		// È¸¿ø ¼öÁ¤ÇÒ¶§ Á¤º¸ ºÒ·¯¿À±â
+		// È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
 		public MemberVO getmember(String id, String passwd) {
 			Connection conn = null;
 			PreparedStatement pstmt = null;
@@ -262,8 +267,8 @@ public class MemberDAO {
 				pstmt.setInt(4, member.getNum());
 				
 				
-				chk = pstmt.executeUpdate(); //ÄÃ·³ÀÌ ¾÷µ¥ÀÌÆ®°¡ µÇ¾úÀ»¶§ ¼ýÀÚ¸¦ ¹ÝÈ¯
-				/*pstmt.executeUpdate(); <- ½è´ø°Å.*/
+				chk = pstmt.executeUpdate(); //ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½È¯
+				/*pstmt.executeUpdate(); <- ï¿½ï¿½ï¿½ï¿½ï¿½.*/
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -275,6 +280,18 @@ public class MemberDAO {
 		}
 	    
 		 
+		public int login(String memberid, String password) {
+			sqlSession=sqlSession();
+			Map<String, String> map = new HashMap<>();
+			map.put("memberid", memberid);
+			String chk=sqlSession.selectOne(namespace+".login",map);
+			if(chk!=null) {
+				if(chk.equals(password)) {return 1;}
+				else {return 0;}
+			}
+			sqlSession.close();
+			return -1; 
+		}
 	   
 	}
 

@@ -20,6 +20,7 @@
       <div class="w3-container " style="overflow:auto; background: rgba(241, 241, 241, 0.75); ">
 			     
 			     <form action="makingPro" enctype="multipart/form-data"  method="post">
+			     <input type="hidden" name=/>
 				 <p> 
 				   방 이름:&nbsp;&nbsp; <input type="text" name="studyName"/><br><br>
 				    방 소개:&nbsp;&nbsp;<br>

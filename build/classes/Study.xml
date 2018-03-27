@@ -4,8 +4,7 @@
 
 <mapper namespace="study">
 	<select id="getNextNum" resultType="int">
-		select groupSer.nextval from
-		dual
+		select groupSer.nextval from dual
 	</select>
 
 	<insert id="makingStudy" parameterType="Room">

@@ -49,10 +49,10 @@ public class StudyDAO extends MybatisConnector{
 		sqlSession.close();
 		return groupli;
 	}
-	public RelationVO getRelation(String corretName,String memberId ) {
+	public RelationVO getRelation(String studyName,String memberId ) {
 		sqlSession=sqlSession();
 		Map<String,String> map = new HashMap<>();
-		map.put("studyName", corretName);
+		map.put("studyName", studyName);
 		map.put("memberId", memberId);
 		RelationVO status=sqlSession.selectOne(namespace+".getRelation",map);
 		sqlSession.close();

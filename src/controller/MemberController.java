@@ -1,12 +1,11 @@
 package controller;
 
-import java.text.SimpleDateFormat;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 
 import com.sist.msk.Action;
 
@@ -61,7 +60,24 @@ public String joinPro(HttpServletRequest request,
 		 return null ; 
 		} 
 
-
+public String loginPro(HttpServletRequest req, HttpServletResponse res) throws Exception {
+	String memberid=req.getParameter("memberid");
+	String passwd=req.getParameter("passwd");
+	MemberDAO dbPro = MemberDAO.getInstance();
+	int pwcheck = dbPro.login(memberid, passwd);
+	if(pwcheck==1) {
+		//MemberVO mVO= dbPro.getMember(memberid);
+		HttpSession session = req.getSession();
+		session.setAttribute("memberid",memberid);
+		//session.setAttribute("nickname",mVO.getNickname());
+		session.setAttribute("passwd",passwd);
+		res.sendRedirect(req.getContextPath()+"/page/main");
+	}else {
+		req.setAttribute("pwcheck",pwcheck);
+		return "/view/loginPro.jsp";
+	}
+	return null;
+}
 
 	
 	
