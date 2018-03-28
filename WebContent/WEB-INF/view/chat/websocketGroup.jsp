@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
+	     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%	String name = "aaa";
 	
 	String group = "1";
@@ -53,6 +54,20 @@
 
 </body>
 <script type="text/javascript">
+
+  
+  var chatdata = [
+	    <c:forEach var="list" items="${chatdata}" varStatus="status">
+	            {"name":'<c:out value="${list.name}" />'
+	            ,"date":'<c:out value="${list.date}" />'
+	            ,"content":'<c:out value="${list.content}" />'	               
+	            } 
+	            <c:if test="${!status.last}">,</c:if>
+	       
+	    </c:forEach> 
+	];
+  
+  
         var textarea = document.getElementById("messageWindow");
         var webSocket = new WebSocket(
     'ws://211.238.142.35:8080<%=request.getContextPath()%>/webGroup?name='
@@ -65,9 +80,14 @@
     
     function testProcess(data){
     	
-		var tmp=data.substr(1,data.length-2);
-    	var cutTmp = tmp.split('][');
+    	var t=data.trim();
+		var tmp=t.substr(t.indexOf('[')+1,t.lastIndexOf(']')-1);
+		/* alert(tmp); */
+    	var cutTmp = tmp.split('] [');
 
+    	for(var i=0;i<cutTmp.length;i++){
+    		cutTmp[i].trim();
+    	}
 		return cutTmp;
 
 
@@ -77,10 +97,10 @@
 
      var texts=testProcess(event.data);
 
-    textarea.innerHTML +="<ul class='w3-ul'><li class='w3-large' style='border:none; max-width:80%;'> "+texts[0]
-    +"<span class='w3-small'>&nbsp;"+texts[2]+"</span>"
+    textarea.innerHTML +="<ul class='w3-ul' style='display:block;' ><li class='w3-large' style='border:none; max-width:80%;'> "+texts[0]
+    +"<span class='w3-small'>&nbsp;"+texts[1]+"</span>"
     +" <div class='w3-panel w3-round-large w3-padding' style='margin:0; max-width:80%;background: rgba(0, 150, 136, 0.75);'>"
-    +" <span class='w3-medium'><font color='white'>"+texts[1]+"</font></span>"
+    +" <span class='w3-medium'><font color='white'>"+texts[2]+"</font></span>"
   +" </div></li></ul>";
 
     
@@ -90,6 +110,38 @@
     function onOpen(event) {
        textarea.innerHTML += "연결 성공<br>";
        
+         
+	for(var i=0;i<chatdata.length;i++){
+		
+		
+		
+		  var l0=chatdata[i].name;
+		  var l1=chatdata[i].date;
+		  var l2=chatdata[i].content.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&").replace(/&quot;/g, "\""); 
+		  
+		  if(l0=='<%=name%>'){
+			  textarea.innerHTML +="<table align='right' width='100%'><tr><td><ul class='w3-ul w3-margin-bottom' style='display:block; '>"
+			  +"<li class='w3-large' style='border:none;' align='right'>"
+		          +"<span class='w3-small'>"+l1+"</span>&nbsp;"
+		         +"<span class='w3-panel w3-round-large w3-padding w3-right '  style='margin:0; max-width:80%; background: rgba(255, 193, 7, 0.75);'>"
+		          +"<span class='w3-medium'>"+l2+"</span></span></li></ul></td></tr></table>";
+			  
+		  }else{
+
+	        textarea.innerHTML +="<ul class='w3-ul' style='display:block;' ><li class='w3-large' style='border:none; max-width:80%;'> "+l0+
+	        "<span class='w3-small'>&nbsp;"+l1+"</span>"
+	        +" <div class='w3-panel w3-round-large w3-padding' style='margin:0; max-width:80%;background: rgba(0, 150, 136, 0.75);'>"
+	        +" <span class='w3-medium'><font color='white'>"+l2+"</font></span>"
+	      +" </div></li></ul>";}
+		
+	}
+         
+         
+       
+
+        
+        
+             textarea.scrollTop=textarea.scrollHeight;
        
     }
     function onError(event) {     alert(event.data);   }
@@ -118,17 +170,18 @@
          	}
         
         
-        textarea.innerHTML +="<ul class='w3-ul w3-margin-bottom' style='display:block; '><li class='w3-large' style='border:none;' align='right'>"
-          +"<span class='w3-small'>"+nowText+"</span>&nbsp;&nbsp;"
-         +"<div class='w3-panel w3-round-large w3-padding w3-right '  style='margin:0; max-width:80%; background: rgba(255, 193, 7, 0.75);'>"
-          +"<span class='w3-medium'>"+inputMessage.value+"</span></div></li></ul>";
-       
+     
          
+		  textarea.innerHTML +="<table align='right' width='100%'><tr><td><ul class='w3-ul w3-margin-bottom' style='display:block; '>"
+			  +"<li class='w3-large' style='border:none;' align='right'>"
+		          +"<span class='w3-small'>"+nowText+"</span>&nbsp;"
+		         +"<span class='w3-panel w3-round-large w3-padding w3-right '  style='margin:0; max-width:80%; background: rgba(255, 193, 7, 0.75);'>"
+		          +"<span class='w3-medium'>"+inputMessage.value+"</span></span></li></ul></td></tr></table>";
           
         
         
         textarea.scrollTop=textarea.scrollHeight;
-        webSocket.send(inputMessage.value);
+        webSocket.send(inputMessage.value.trim());
 		inputMessage.value = "";
 	}
 </script>

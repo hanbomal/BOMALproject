@@ -40,6 +40,7 @@ public class CalendarController {
 		li = cpro.getCalendarList(1); // 임의로 1로 해놓음
 
 		System.out.println(li);
+<<<<<<< HEAD
 
 		req.setAttribute("list", li);
 
@@ -136,4 +137,103 @@ public class CalendarController {
 
 	}
 
+=======
+		
+       req.setAttribute("list", li);
+        
+        return "/calendar/study_calendar2.jsp";}
+  
+	
+    public String addPro1(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		
+    	CalendarDAO cpro=CalendarDAO.getInstance();
+    	CalendarVO calendar=new CalendarVO();
+    	
+    	calendar.setTitle(req.getParameter("title"));
+    	if(req.getParameter("description")!=null) {
+    	calendar.setDescription(req.getParameter("description"));
+    	}else {
+    		calendar.setDescription("");
+    	}
+    	if(req.getParameter("place")!=null) {
+    		calendar.setPlace(req.getParameter("place"));
+        	}else {
+        		calendar.setPlace("");
+        	}
+        	
+    	calendar.setStartdate(req.getParameter("startdate"));
+    	calendar.setEnddate(req.getParameter("enddate"));
+    	calendar.setStudynum(1);	//임의로 1로 해놓음
+    	
+    	cpro.addCalendar(calendar);
+    	System.out.println(calendar);
+    	
+        
+        return "/calendar/addComp.jsp";}
+    
+ public String deleteCalendar(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		
+    	CalendarDAO cpro=CalendarDAO.getInstance();
+    	String num=req.getParameter("id");
+    	
+    	cpro.deleteCalendar(num);
+    	
+        System.out.println("스케쥴 삭제");
+        return "/calendar/deleteComp.jsp";}
+    
+
+ public String contents(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+    		
+        	  String id = req.getParameter("id");
+        	  CalendarDAO cpro=CalendarDAO.getInstance();
+        	  CalendarVO calendar=cpro.getCalendar(id);
+        	  req.setAttribute("calendar",calendar); 
+        	
+            
+            return "/calendar/contentsView.jsp";
+        
+}
+ public String updateForm(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		
+	  String id = req.getParameter("id");
+	  CalendarDAO cpro=CalendarDAO.getInstance();
+	  CalendarVO calendar=cpro.getCalendar(id);
+	  req.setAttribute("calendar",calendar); 
+	
+   
+   return "/calendar/updateSchedule.jsp";
+
+}      
+ 
+ public String updatePro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		
+	 
+	  CalendarDAO cpro=CalendarDAO.getInstance();
+	  CalendarVO calendar=new CalendarVO();
+	  
+	  calendar.setDescription(req.getParameter("description"));
+	  calendar.setEnddate(req.getParameter("enddate"));
+	  calendar.setStartdate(req.getParameter("startdate"));
+	  calendar.setNum(Integer.parseInt(req.getParameter("id")));
+	  calendar.setPlace(req.getParameter("place"));
+	  calendar.setStudynum(Integer.parseInt(req.getParameter("studynum")));
+	  calendar.setTitle(req.getParameter("title"));
+	  
+	cpro.updateCalendar(calendar);
+  
+  return "/calendar/updateComp.jsp";
+
+}      
+	
+ public String test1(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		
+
+ 
+ return "/calendar/addComp.jsp";
+
+}     
+	        
+	
+	
+>>>>>>> origin/jihye
 }

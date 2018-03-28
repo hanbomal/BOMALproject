@@ -38,7 +38,7 @@ public class WebSocketServerGroup {
 			
 			String movemessage 
 			= "["+name.substring(1, name.indexOf("]"))
-			+ "][" + message+"]["+datetext+"]";
+			+ "] [" +datetext+"] ["+ message+"]";
 			
 			System.out.println(movemessage);
 			String cid = (String)	session.getRequestParameterMap().get("group").get(0);
@@ -57,7 +57,7 @@ public class WebSocketServerGroup {
 	            
 	            if(file.isFile() && file.canWrite()){
 
-	                bufferedWriter.write(movemessage);
+	                bufferedWriter.write(movemessage.trim().replace("\n", ""));
 	                bufferedWriter.newLine();
 	                bufferedWriter.close();}
 	            
@@ -92,12 +92,12 @@ public class WebSocketServerGroup {
 		System.out.println(session.getRequestParameterMap());
 		// Add session to the connected sessions set
 		clients.add(session);
-		try {
+		/*try {
 			onMessage("입장하였습니다.", session);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	@OnClose
