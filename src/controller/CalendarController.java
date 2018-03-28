@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
-import calendar.CalendarDAO;
-import calendar.CalendarVO;
+import dao.CalendarDAO;
+import model.CalendarVO;
 
 @Controller
 @RequestMapping("/calcontroller")

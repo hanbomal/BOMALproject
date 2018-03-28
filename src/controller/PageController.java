@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
-import studygroup.RelationDAO;
-import studygroup.StudyDAO;
-import studygroup.StudyVO;
+import dao.RelationDAO;
+import dao.StudyDAO;
+import model.StudyVO;
 
 @Controller
 @RequestMapping("/page")

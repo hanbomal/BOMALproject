@@ -7,8 +7,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import member.MemberDAO;
-import member.MemberVO;
+import dao.MemberDAO;
+import model.MemberVO;
 
 @Controller
 @RequestMapping("/member")
