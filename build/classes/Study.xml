@@ -4,8 +4,7 @@
 
 <mapper namespace="study">
 	<select id="getNextNum" resultType="int">
-		select groupSer.nextval from
-		dual
+		select groupSer.nextval from dual
 	</select>
 
 	<insert id="makingStudy" parameterType="Room">
@@ -19,14 +18,15 @@
 		select * from studygroup where studyName like '%'||#{studyName}||'%'
 	</select>
 
-	<select id="getStatus" parameterType="hashmap" resultType="string">
-		select status from
-		studygroup g, studyrelation r where g.studyName=r.studyName
-		and
-		memberId=#{memberId}
-		<if test="studyName!=null">
-		   and r.studyName=#{studyName}
-		</if>
-	</select>
+ <select id="getRelation" parameterType="hashmap" resultType="Relation">
+		select memberId,r.studyName, joinPoint, r.nickName,
+		joinDate, lastDate, position, r.leader, status
+		 from studygroup g, studyrelation r where 
+		g.studyName=r.studyName and memberId=#{memberid} 
+		and g.studyName =#{studyName}
+	</select> 
 
+	<select id="getAllStudy" resultType="Room">
+		select * from studygroup
+	</select>
 </mapper>

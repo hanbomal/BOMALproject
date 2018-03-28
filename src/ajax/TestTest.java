@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import calendar.CalendarDAO;
-import calendar.CalendarVO;
+import dao.CalendarDAO;
+import model.CalendarVO;
 
 public class TestTest extends HttpServlet{
 

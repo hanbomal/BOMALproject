@@ -5,9 +5,9 @@
 <mapper namespace="relation">
 	<insert id="requestJoin" parameterType="hashmap">
 		insert into studyrelation
-		values(#{memberId},
-		#{studyName},0,null,sysdate,sysdate,
-		null,null,1)
+		values(#{memberid},
+		#{studyName},0,#{nickname},sysdate,sysdate,
+		#{position},#{leader},1)
 	</insert>
 
 	<delete id="cancelJoin" parameterType="hashmap">

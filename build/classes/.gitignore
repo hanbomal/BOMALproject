@@ -1,11 +1,6 @@
-/Calendar.xml
-/Relation.xml
-/Study.xml
-/ajax/
-/calendar/
 /controller/
-/filter/
+/calendar/
+/chat/
 /member/
-/mybatis-config.xml
 /studygroup/
-/util/
+/Member.xml

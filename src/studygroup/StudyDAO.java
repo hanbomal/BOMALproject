@@ -1,6 +1,8 @@
 package studygroup;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,20 +28,33 @@ public class StudyDAO extends MybatisConnector{
 		sqlSession.commit();
 		sqlSession.close();
 	}
-	public List resultList(String studyName) {
+	public List resultList(String studyName, String memberid) {
 		sqlSession=sqlSession();
 		Map<String,String> map = new HashMap<>();
 		map.put("studyName", studyName);
 		List li=sqlSession.selectList(namespace+".resultList",map);
+		List groupli=null;
+		Iterator it = li.iterator(); 
+		
+		if(it.hasNext()) {
+			groupli=new ArrayList<>();
+			do {
+				StudyVO groupInfo = (StudyVO) it.next();
+				StudyDAO studyDB = StudyDAO.getInstance();
+				RelationVO info=studyDB.getRelation(groupInfo.getStudyName(), memberid);
+				groupInfo.setRelation(info);
+				groupli.add(groupInfo);				
+			}while(it.hasNext());
+		}
 		sqlSession.close();
-		return li;
+		return groupli;
 	}
-	public String getStatus(String correctName,String memberId ) {
+	public RelationVO getRelation(String studyName,String memberid ) {
 		sqlSession=sqlSession();
 		Map<String,String> map = new HashMap<>();
-		map.put("studyName", correctName);
-		map.put("memberId", memberId);
-		String status=sqlSession.selectOne(namespace+".getStatus",map);
+		map.put("studyName", studyName);
+		map.put("memberid", memberid);
+		RelationVO status=sqlSession.selectOne(namespace+".getRelation",map);
 		sqlSession.close();
 		return status;
 	}

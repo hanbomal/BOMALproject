@@ -1,129 +1,103 @@
 package controller;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
-import com.sist.msk.Action;
 
-import studygroup.GroupInfo;
-import studygroup.RelationDAO;
-import studygroup.StudyDAO;
-import studygroup.StudyVO;
+import dao.RelationDAO;
+import dao.StudyDAO;
+import model.StudyVO;
 
-public class PageController extends Action {
-	public void autoComplete(HttpServletRequest req) throws Throwable{
+@Controller
+@RequestMapping("/page")
+public class PageController {
+
+	// autoComplete Method
+	public void autoComplete(HttpServletRequest req) throws Throwable {
 		StudyDAO studyDB = StudyDAO.getInstance();
-		//auto_complete
-		List<StudyVO> allList=studyDB.getAllStudy();
-		String nameList="";
-		for(StudyVO study: allList){
-			nameList+="\""+study.getStudyName()+"\",";	 
+		// auto_complete
+		List<StudyVO> allList = studyDB.getAllStudy();
+		String nameList = "";
+		for (StudyVO study : allList) {
+			nameList += "\"" + study.getStudyName() + "\",";
 		}
 		req.setAttribute("nameList", nameList);
 	}
-	
-	
+
+	// get Session ID Method
+	public String getSessionId(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		String memberid = (String) session.getAttribute("memberid");
+		if (memberid == null) {
+			memberid = "";
+		}
+		return memberid;
+	}
+
+	@RequestMapping("/main")
 	public String main(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		autoComplete(req);
-		
-		//search_studyRoom
 		StudyDAO studyDB = StudyDAO.getInstance();
 		String studyName = req.getParameter("studyName");
-		String correctName = req.getParameter("correctName");
-		if(correctName==null) {
-			correctName="";
+		if (studyName == null) {
+			studyName = "defaultName";
 		}
-		if(studyName==null) {
-			studyName="defaultName";
-		}
-		//검색 결과에따라서 리스트가 달라지게끔
-		List<StudyVO> li=studyDB.resultList(studyName);
-		GroupInfo group= new GroupInfo();
-		
-		String status = studyDB.getStatus(studyName, "gon");
-		req.setAttribute("room", li);
-		req.setAttribute("status", status);
-		
-		return "/view/main.jsp";
+		// 검색 결과에따라서 리스트가 달라지게끔
+		String memberid = getSessionId(req);
+		List<StudyVO> group = studyDB.resultList(studyName, memberid);
+		req.setAttribute("group", group);
+		req.setAttribute("studyName", studyName);
+		return "page/main";
 	}
 
-	public String searchGroup(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-		String studyName = req.getParameter("studyName");
-		String correctName = req.getParameter("correctName");
-		if (correctName == null) {
-			correctName = "";
-		}
-
-		StudyDAO studyDB = StudyDAO.getInstance();
-		List li = studyDB.resultList(studyName);
-		String status = studyDB.getStatus(correctName, "gon");
-		req.setAttribute("room", li);
-		req.setAttribute("status", status);
-		return "/view/searchGroup.jsp";
-	}
-
+	@RequestMapping("/requestJoin")
 	public String requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+		RelationDAO dbPro = RelationDAO.getInstance();
 		String reqNum = req.getParameter("reqNum");
+		String studyName = req.getParameter("studyName");
 		String correctName = req.getParameter("correctName");
+		String leader = req.getParameter("leader");
 		if (reqNum == null) {
-			reqNum = "0";
+			reqNum = "";
 		}
-		// reqNum을 받아왔을 때, relation 테이블에 추가
-		RelationDAO dbPro = RelationDAO.getInstance();
 		if (reqNum.equals("1")) {
-			dbPro.requestJoin("gon", correctName);
+			dbPro.requestJoin(getSessionId(req), correctName, "member_nick", "회원", leader);
+			studyName = URLEncoder.encode(studyName, "UTF-8");
+			res.sendRedirect(req.getContextPath() + "/page/main?studyName=" + studyName);
 		}
-		res.sendRedirect(req.getContextPath() + "/page/main");
 		return null;
 	}
 
+	@RequestMapping("/cancelJoin")
 	public String cancelJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-		String delNum = req.getParameter("reqNum");
-		String studyName = req.getParameter("correctName");
-		if (delNum == null) {
-			delNum = "0";
-		}
-		// delNum을 받아왔을 때, relation 테이블에 삭제
 		RelationDAO dbPro = RelationDAO.getInstance();
-		if (delNum.equals("1")) {
-			dbPro.cancelJoin("gon", studyName);
+		String delNum = req.getParameter("delNum");
+		String studyName = req.getParameter("studyName");
+		String correctName = req.getParameter("correctName");
+		if (delNum == null) {
+			delNum = "";
 		}
-		res.sendRedirect(req.getContextPath() + "/page/main");
+		if (delNum.equals("1")) {
+			dbPro.cancelJoin(getSessionId(req), correctName);
+			studyName = URLEncoder.encode(studyName, "UTF-8");
+			res.sendRedirect(req.getContextPath() + "/page/main?studyName=" + studyName);
+		}
 		return null;
 	}
 
-	public String about(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/about.jsp";
-	}
-
-	public String test(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_test.jsp";
-	}
-
-	public String study_board(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_board.jsp";
-	}
-
-	public String study_album(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_album.jsp";
-	}
-
-	public String study_making(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_making.jsp";
-	}
-
+	@RequestMapping("/makingPro")
 	public String makingPro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 
 		String realFolder = "";
@@ -150,10 +124,10 @@ public class PageController extends Action {
 		}
 
 		StudyVO room = new StudyVO();
-		room.setPeopleCount(1);
-		room.setLeader("gon");
-		room.setStudy_intro(multi.getParameter("study_intro"));
 		room.setStudyName(multi.getParameter("studyName"));
+		room.setPeopleCount(1);
+		room.setLeader(getSessionId(req));
+		room.setStudy_intro(multi.getParameter("study_intro"));
 
 		if (file[0] != null) {
 			room.setStudy_pro(filename[0]);
@@ -177,6 +151,30 @@ public class PageController extends Action {
 		dbPro.makingStudy(room);
 		res.sendRedirect(req.getContextPath() + "/page/main");
 		return null;
+	}
+
+	@RequestMapping("/about")
+	public String about(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/about";
+	}
+
+	@RequestMapping("/study_board")
+	public String study_board(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/study_board";
+	}
+
+	@RequestMapping("/study_album")
+	public String study_album(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/study_album";
+	}
+
+	@RequestMapping("/study_making")
+	public String study_making(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/study_making";
 	}
 
 }
