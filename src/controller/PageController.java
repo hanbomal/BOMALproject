@@ -112,7 +112,6 @@ public class PageController extends Action {
 	
 	public String makingPro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
-		
 		String realFolder = "";
 		String encType = "utf-8";
 		int maxSize = 10 * 1024 * 1024;
