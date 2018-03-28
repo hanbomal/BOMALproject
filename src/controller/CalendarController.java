@@ -5,12 +5,20 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.sist.msk.Action;
 
 import calendar.CalendarDAO;
 import calendar.CalendarVO;
 
-public class CalendarController  extends Action {
+
+@Controller
+@RequestMapping("/calcontroller")
+public class CalendarController {
+	
+	@RequestMapping("/listview")
 	public String listview(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
 			CalendarDAO cpro=CalendarDAO.getInstance();
@@ -24,8 +32,9 @@ public class CalendarController  extends Action {
 			
 	       req.setAttribute("list", li);
 	        
-	        return "/calendar/study_calendar.jsp";}
-	  
+	        return "calendar/study_calendar";}
+	 
+	@RequestMapping("/test")
 	public String test(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
 		CalendarDAO cpro=CalendarDAO.getInstance();
@@ -39,9 +48,9 @@ public class CalendarController  extends Action {
 		
        req.setAttribute("list", li);
         
-        return "/calendar/study_calendar2.jsp";}
+        return "calendar/study_calendar2";}
   
-	
+	@RequestMapping("/addPro1")
     public String addPro1(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
     	CalendarDAO cpro=CalendarDAO.getInstance();
@@ -67,8 +76,10 @@ public class CalendarController  extends Action {
     	System.out.println(calendar);
     	
         
-        return "/calendar/addComp.jsp";}
-    
+        return "calendar/addComp";
+        }
+	
+	@RequestMapping("/deleteCalendar")
  public String deleteCalendar(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
     	CalendarDAO cpro=CalendarDAO.getInstance();
@@ -76,9 +87,9 @@ public class CalendarController  extends Action {
     	cpro.deleteCalendar(num);
     	
         System.out.println("스케쥴 삭제");
-        return "/calendar/deleteComp.jsp";}
+        return "calendar/deleteComp";}
     
-
+	@RequestMapping("/contents")
  public String contents(HttpServletRequest req, HttpServletResponse res) throws Throwable {
     		
         	  String id = req.getParameter("id");
@@ -87,9 +98,10 @@ public class CalendarController  extends Action {
         	  req.setAttribute("calendar",calendar); 
         	
             
-            return "/calendar/contentsView.jsp";
+            return "calendar/contentsView";
         
 }
+	@RequestMapping("/updateForm")
  public String updateForm(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
 	  String id = req.getParameter("id");
@@ -98,10 +110,10 @@ public class CalendarController  extends Action {
 	  req.setAttribute("calendar",calendar); 
 	
    
-   return "/calendar/updateSchedule.jsp";
+   return "calendar/updateSchedule";
 
 }      
- 
+	@RequestMapping("/updatePro")
  public String updatePro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
 	 
@@ -118,15 +130,15 @@ public class CalendarController  extends Action {
 	  
 	cpro.updateCalendar(calendar);
   
-  return "/calendar/updateComp.jsp";
+  return "calendar/updateComp";
 
 }      
-	
+	@RequestMapping("/test1")
  public String test1(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
 
  
- return "/calendar/addComp.jsp";
+ return "calendar/addComp";
 
 }     
 	        

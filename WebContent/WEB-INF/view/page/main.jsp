@@ -31,6 +31,7 @@
 						</div> 
 					
 						<c:if test="${room.relation.status==null}">
+							<c:if test="${memberid!=null}">
 							<form class="w3-right" action="requestJoin" method="post">
 								<input type="hidden" name="reqNum" value="1" /> 
 								<input type="hidden" name="correctName" value="${room.studyName}" />
@@ -39,8 +40,10 @@
 								<input class="w3-button w3-blue w3-round " type="submit"
 									value="가입" /> 
 							</form>
+							</c:if>
 						</c:if> 
 						<c:if test="${room.relation.status==1}">
+							<c:if test="${memberid!=null}">
 							<form action="cancelJoin" class="w3-right" method="post">
 								<input type="hidden" name="delNum" value="1" /> 
 								<input type="hidden" name="correctName" value="${room.studyName}" />
@@ -48,6 +51,7 @@
 								<input class="w3-button w3-red w3-round " type="submit"
 									value="취소" />
 							</form>
+							</c:if>
 						</c:if>
 					</li>
 				</ul>

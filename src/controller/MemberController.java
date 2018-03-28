@@ -1,20 +1,22 @@
 package controller;
 
 
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sist.msk.Action;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import member.MemberDAO;
 import member.MemberVO;
 
-public class MemberController extends Action {
+@Controller
+@RequestMapping("/member")
+public class MemberController {
 
-
+@RequestMapping("/join")
 public String join(HttpServletRequest request,
 		 HttpServletResponse response)  throws Throwable { 
 	
@@ -29,9 +31,9 @@ public String join(HttpServletRequest request,
 	request.setAttribute("num", num);
 	request.setAttribute("listid", listid);
 	
-		 return  "/view/join.jsp";
+		 return "member/join";
 		} 
-
+@RequestMapping("/joinPro")
 public String joinPro(HttpServletRequest request,
 		 HttpServletResponse response)  throws Throwable { 
 	
@@ -53,13 +55,13 @@ public String joinPro(HttpServletRequest request,
 	member.setPasswd(request.getParameter("passwd"));
 	dbpro.insertMember(member);
 	
-   response.sendRedirect(request.getContextPath()+"/view/main.jsp");
+   response.sendRedirect(request.getContextPath()+"/page/main");
 	
    
    
 		 return null ; 
 		} 
-
+@RequestMapping("/loginPro")
 public String loginPro(HttpServletRequest req, HttpServletResponse res) throws Exception {
 	String memberid=req.getParameter("memberid");
 	String passwd=req.getParameter("passwd");
@@ -74,7 +76,7 @@ public String loginPro(HttpServletRequest req, HttpServletResponse res) throws E
 		res.sendRedirect(req.getContextPath()+"/page/main");
 	}else {
 		req.setAttribute("pwcheck",pwcheck);
-		return "/view/loginPro.jsp";
+		return "member/loginPro";
 	}
 	return null;
 }

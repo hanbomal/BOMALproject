@@ -2,7 +2,6 @@ package controller;
 
 import java.io.File;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -11,15 +10,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
-import com.sist.msk.Action;
 
 import studygroup.RelationDAO;
 import studygroup.StudyDAO;
 import studygroup.StudyVO;
 
-public class PageController extends Action {
+
+@Controller
+@RequestMapping("/page")
+public class PageController{
+
+	// autoComplete Method
 	public void autoComplete(HttpServletRequest req) throws Throwable{
 		StudyDAO studyDB = StudyDAO.getInstance();
 		//auto_complete
@@ -30,7 +36,17 @@ public class PageController extends Action {
 		}
 		req.setAttribute("nameList", nameList);
 	}
-
+	//get Session ID Method 
+	public String getSessionId(HttpServletRequest req) {
+		HttpSession session = req.getSession();
+		String memberid=(String) session.getAttribute("memberid");
+		if(memberid==null) {
+			memberid="";
+		}
+		return memberid;
+	}
+	
+	@RequestMapping("/main")
 	public String main(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		autoComplete(req);
 		StudyDAO studyDB = StudyDAO.getInstance();
@@ -43,8 +59,10 @@ public class PageController extends Action {
 		List<StudyVO> group=studyDB.resultList(studyName,memberid);
 		req.setAttribute("group", group);
 		req.setAttribute("studyName", studyName);
-		return "/view/main.jsp";
+		return "page/main";
 	}
+	
+	@RequestMapping("/requestJoin")
 	public String requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		RelationDAO dbPro = RelationDAO.getInstance();
 		String reqNum = req.getParameter("reqNum");
@@ -61,6 +79,8 @@ public class PageController extends Action {
 		}
 		return null;
 	}
+	
+	@RequestMapping("/cancelJoin")
 	public String cancelJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		RelationDAO dbPro = RelationDAO.getInstance();
 		String delNum = req.getParameter("delNum");
@@ -76,40 +96,8 @@ public class PageController extends Action {
 		}
 		return null;
 	}
-
-	public String about(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/about.jsp";
-	}
-
-	public String test(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_test.jsp";
-	}
-
-	public String study_board(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_board.jsp";
-	}
-
-	public String study_album(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_album.jsp";
-	}
-
-	public String study_making(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-
-		return "/view/study_making.jsp";
-	}
-	public String getSessionId(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		String memberid=(String) session.getAttribute("memberid");
-		if(memberid==null) {
-			memberid="";
-		}
-		return memberid;
-	}
 	
+	@RequestMapping("/makingPro")
 	public String makingPro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		
 		String realFolder = "";
@@ -164,5 +152,31 @@ public class PageController extends Action {
 		res.sendRedirect(req.getContextPath() + "/page/main");
 		return null;
 	}
+	
+
+	@RequestMapping("/about")
+	public String about(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/about";
+	}
+	
+	@RequestMapping("/study_board")
+	public String study_board(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/study_board";
+	}
+	
+	@RequestMapping("/study_album")
+	public String study_album(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/study_album";
+	}
+	
+	@RequestMapping("/study_making")
+	public String study_making(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/study_making";
+	}
+	
 
 }

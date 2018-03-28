@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+id="WebApp_ID" version="3.0">
 
- 
   <display-name>teamProject</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -12,82 +15,51 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   
+   <!--  
+  pageController(/page/*) calendarController(/calcontroller/*)
+   MemberController(/member/*) chatController(/chatcontroller/*)
+   -->
+  
   <jsp-config>
     <jsp-property-group>
-      <url-pattern>/view/*</url-pattern>
-      <include-prelude>/common/header.jsp</include-prelude>
-      <include-coda>/common/footer.jsp</include-coda>
+      <url-pattern>/WEB-INF/view/*</url-pattern>
+      <include-prelude>/WEB-INF/common/header.jsp</include-prelude>
+      <include-coda>/WEB-INF/common/footer.jsp</include-coda>
     </jsp-property-group>
   </jsp-config>
   
-  <filter>
-    <filter-name>encodingFilter</filter-name>
-    <filter-class>filter.CharacterEncodingFilter</filter-class>
-    <init-param>
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-  </filter> 
-  <filter-mapping>
-    <filter-name>encodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping> 
- 
-  <servlet>
- 	<servlet-name>pageController</servlet-name>
- 	<servlet-class>controller.PageController</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  <servlet-name>pageController</servlet-name>
-  <url-pattern>/page/*</url-pattern>
-  </servlet-mapping>
-  
-    <servlet>
- 	<servlet-name>calendarController</servlet-name>
- 	<servlet-class>controller.CalendarController</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  <servlet-name>calendarController</servlet-name>
-  <url-pattern>/calcontroller/*</url-pattern>
-  </servlet-mapping>
-  
-  
-  <servlet>
-    <servlet-name>TestAjax</servlet-name>
-    <servlet-class>ajax.TestTest</servlet-class>
-  </servlet>
+<!-- dispatcher  --> 
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				/WEB-INF/dispatcher-servlet.xml
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 
-  <servlet-mapping>
-    <servlet-name>TestAjax</servlet-name>
-    <url-pattern>/TestAjax</url-pattern>
-  </servlet-mapping>
-  
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+<!-- dispatcher -->
 
-     <servlet>
- 	<servlet-name>MemberController</servlet-name>
- 	<servlet-class>controller.MemberController</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  <servlet-name>MemberController</servlet-name>
-  <url-pattern>/member/*</url-pattern>
-  </servlet-mapping>
-  
-
-    <servlet>
- 	<servlet-name>chatController</servlet-name>
- 	<servlet-class>controller.ChatController</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  <servlet-name>chatController</servlet-name>
-  <url-pattern>/chatcontroller/*</url-pattern>
-  </servlet-mapping>
-  
-  
-
-  
+<!-- filter  -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+ <!-- filter  -->
   
 </web-app>
