@@ -4,10 +4,10 @@
 <configuration>
    <!-- add -->
    <typeAliases>
-   <typeAlias type="studygroup.StudyVO" alias="Room"/> 
-  <typeAlias type="calendar.CalendarVO" alias="Schedule"/>  
-  <typeAlias type="studygroup.RelationVO" alias="Relation"/>  
-  <typeAlias type="member.MemberVO" alias="Member"/>  
+   <typeAlias type="model.StudyVO" alias="Room"/> 
+  <typeAlias type="model.CalendarVO" alias="Schedule"/>  
+  <typeAlias type="model.RelationVO" alias="Relation"/>  
+  <typeAlias type="model.MemberVO" alias="Member"/>  
   
    </typeAliases> 
    <!--  -->

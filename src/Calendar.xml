@@ -17,11 +17,16 @@
 		insert into calendar values(#{num},#{studynum},#{title},#{place},#{description},
 		#{startdate},#{enddate},sysdate)
 	</insert>
+	<delete id="deleteCalendar" parameterType="hashmap">
+	delete from calendar where num=#{num}
+	</delete>
 	<select id="getNextNumber" resultType="int" >
 		select calendarSer.nextval from dual
 	</select>
 	<select id="getCalendar" resultType="Schedule" parameterType="hashmap">
 	select * from calendar where num=#{num}
 	</select>
+	
+
 
 </mapper>
