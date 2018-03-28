@@ -176,5 +176,11 @@ public class PageController {
 
 		return "page/study_making";
 	}
+	
+	@RequestMapping("/test")
+	public String test(HttpServletRequest req, HttpServletResponse res) throws Throwable {
+
+		return "page/study_test";
+	}
 
 }
