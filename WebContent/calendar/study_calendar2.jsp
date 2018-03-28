@@ -289,6 +289,7 @@ function update(data){
 	}
 function deleteSchedule(data){
 	var id="id="+data;
+	
 	sendRequest("<%=request.getContextPath()%>/calcontroller/deleteCalendar",id,fromServer,"POST");
 	
 }

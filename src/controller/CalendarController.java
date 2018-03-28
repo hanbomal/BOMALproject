@@ -73,6 +73,7 @@ public class CalendarController  extends Action {
 		
     	CalendarDAO cpro=CalendarDAO.getInstance();
     	String num=req.getParameter("id");
+    	
     	cpro.deleteCalendar(num);
     	
         System.out.println("스케쥴 삭제");
