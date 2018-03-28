@@ -20,66 +20,66 @@ import studygroup.RelationDAO;
 import studygroup.StudyDAO;
 import studygroup.StudyVO;
 
-
 @Controller
 @RequestMapping("/page")
-public class PageController{
+public class PageController {
 
 	// autoComplete Method
-	public void autoComplete(HttpServletRequest req) throws Throwable{
+	public void autoComplete(HttpServletRequest req) throws Throwable {
 		StudyDAO studyDB = StudyDAO.getInstance();
-		//auto_complete
-		List<StudyVO> allList=studyDB.getAllStudy();
-		String nameList="";
-		for(StudyVO study: allList){
-			nameList+="\""+study.getStudyName()+"\",";	 
+		// auto_complete
+		List<StudyVO> allList = studyDB.getAllStudy();
+		String nameList = "";
+		for (StudyVO study : allList) {
+			nameList += "\"" + study.getStudyName() + "\",";
 		}
 		req.setAttribute("nameList", nameList);
 	}
-	//get Session ID Method 
+
+	// get Session ID Method
 	public String getSessionId(HttpServletRequest req) {
 		HttpSession session = req.getSession();
-		String memberid=(String) session.getAttribute("memberid");
-		if(memberid==null) {
-			memberid="";
+		String memberid = (String) session.getAttribute("memberid");
+		if (memberid == null) {
+			memberid = "";
 		}
 		return memberid;
 	}
-	
+
 	@RequestMapping("/main")
 	public String main(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		autoComplete(req);
 		StudyDAO studyDB = StudyDAO.getInstance();
 		String studyName = req.getParameter("studyName");
-		if(studyName==null) {
-			studyName="defaultName";
+		if (studyName == null) {
+			studyName = "defaultName";
 		}
-		//검색 결과에따라서 리스트가 달라지게끔
-		String memberid=getSessionId(req);
-		List<StudyVO> group=studyDB.resultList(studyName,memberid);
+		// 검색 결과에따라서 리스트가 달라지게끔
+		String memberid = getSessionId(req);
+		List<StudyVO> group = studyDB.resultList(studyName, memberid);
 		req.setAttribute("group", group);
 		req.setAttribute("studyName", studyName);
 		return "page/main";
 	}
-	
+
 	@RequestMapping("/requestJoin")
 	public String requestJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		RelationDAO dbPro = RelationDAO.getInstance();
 		String reqNum = req.getParameter("reqNum");
 		String studyName = req.getParameter("studyName");
 		String correctName = req.getParameter("correctName");
-		String leader=req.getParameter("leader");
+		String leader = req.getParameter("leader");
 		if (reqNum == null) {
 			reqNum = "";
 		}
 		if (reqNum.equals("1")) {
-			dbPro.requestJoin(getSessionId(req), correctName,"member_nick","회원",leader);
-			studyName=URLEncoder.encode(studyName, "UTF-8");
-			res.sendRedirect(req.getContextPath() + "/page/main?studyName="+studyName);
+			dbPro.requestJoin(getSessionId(req), correctName, "member_nick", "회원", leader);
+			studyName = URLEncoder.encode(studyName, "UTF-8");
+			res.sendRedirect(req.getContextPath() + "/page/main?studyName=" + studyName);
 		}
 		return null;
 	}
-	
+
 	@RequestMapping("/cancelJoin")
 	public String cancelJoin(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 		RelationDAO dbPro = RelationDAO.getInstance();
@@ -91,15 +91,15 @@ public class PageController{
 		}
 		if (delNum.equals("1")) {
 			dbPro.cancelJoin(getSessionId(req), correctName);
-			studyName=URLEncoder.encode(studyName, "UTF-8");
-			res.sendRedirect(req.getContextPath() + "/page/main?studyName="+studyName);
+			studyName = URLEncoder.encode(studyName, "UTF-8");
+			res.sendRedirect(req.getContextPath() + "/page/main?studyName=" + studyName);
 		}
 		return null;
 	}
-	
+
 	@RequestMapping("/makingPro")
 	public String makingPro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-		
+
 		String realFolder = "";
 		String encType = "utf-8";
 		int maxSize = 10 * 1024 * 1024;
@@ -152,31 +152,29 @@ public class PageController{
 		res.sendRedirect(req.getContextPath() + "/page/main");
 		return null;
 	}
-	
 
 	@RequestMapping("/about")
 	public String about(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 
 		return "page/about";
 	}
-	
+
 	@RequestMapping("/study_board")
 	public String study_board(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 
 		return "page/study_board";
 	}
-	
+
 	@RequestMapping("/study_album")
 	public String study_album(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 
 		return "page/study_album";
 	}
-	
+
 	@RequestMapping("/study_making")
 	public String study_making(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 
 		return "page/study_making";
 	}
-	
 
 }

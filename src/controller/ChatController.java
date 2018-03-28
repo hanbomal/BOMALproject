@@ -1,26 +1,20 @@
 package controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sist.msk.Action;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import calendar.CalendarDAO;
-import calendar.CalendarVO;
+@Controller
+@RequestMapping("/chatcontroller")
+public class ChatController {
 
-public class ChatController  extends Action {
+	@RequestMapping("/intro")
+	public String intro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
 
-	
- public String intro(HttpServletRequest req, HttpServletResponse res) throws Throwable {
-		
+		return "chat/websocketGroup";
 
- 
- return "/chat/websocketGroup.jsp";
+	}
 
-}     
-	        
-	
-	
 }
